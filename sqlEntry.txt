@@ -1,0 +1,9 @@
+
+CREATE TABLE users (user_id SERIAL PRIMARY KEY, username VARCHAR(255), email VARCHAR(255), password VARCHAR(255));
+
+CREATE TABLE projects (project_id SERIAL PRIMARY KEY, project_name VARCHAR(255), user_id INTEGER REFERENCES users(user_id), html TEXT, css TEXT );
+
+INSERT INTO users (username, email, password) VALUES ('justeban', 'justinjodymorris@gmail.com', 'pa55worD');
+
+INSERT INTO projects (project_name, html, user_id) VALUES ('BUSMALL MEMORY GAME','<img src="https://www.atlantisbahamas.com/media/Things%20To%20Do/Water%20Park/Beaches/Hero/Experiences_Beach.jpg" alt="beach"/>' , 2 );
+
