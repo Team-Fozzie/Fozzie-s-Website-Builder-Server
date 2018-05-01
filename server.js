@@ -18,6 +18,7 @@ app.use(express.urlencoded({extended: true}));
 
 
 app.put('/app/data/:id', (req, res) =>{
+  // console.log('in app/data/:id')
   client.query(`UPDATE projects
   SET html = $1 
   WHERE project_id = $2;`, [req.body.html, req.params.id])
