@@ -17,6 +17,14 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 
+app.put('/app/data/:id', (req, res) =>{
+  client.query(`UPDATE projects
+  SET html = $1 
+  WHERE project_id = $2;`, [req.body.html, req.params.id])
+    .then(() => res.send('Project Updated'))
+    .catch(console.error);
+
+});
 app.get('/users', (request, response) => {
   client.query('SELECT * FROM users')
     .then(result => response.send(result.rows))
