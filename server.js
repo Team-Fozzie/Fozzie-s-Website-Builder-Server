@@ -38,6 +38,39 @@ app.get('/app/project/:id', (req, res) => {
     .catch(console.error);
 });
 
+//get all projects
+app.get('/app/user/projects/:id', (req, res) => {
+  client.query(`
+  SELECT (project_id, name) FROM projects WHERE project_id = $1;
+  `,[
+    req.params.id
+  ])
+    .then(result => res.send(result.rows))
+    .catch(console.error);
+});
+
+//delete one project
+app.delete('/app/user/projects/delete/:id', (req, res) => {
+  client.query(`
+  DELETE FROM projects WHERE project_id =$1;
+  `,[
+    req.params.id
+  ])
+    .then(result => res.send('delete successful'))
+    .catch(console.error);
+});
+
+//delete all projects
+app.delete('/app/user/delete/:id', (req, res) => {
+  client.query(`
+  DELETE * FROM projects WHERE user_id = $1;
+  `, [
+    req.params.id
+  ])
+    .then(result => res.send('delete all successful'))
+    .catch(console.error);
+});
+
 app.post('/users/:username', (request, response) => {
   client.query('SELECT count(*) FROM users WHERE username=$1 OR email=$2', [
     request.params.username, request.params.email
