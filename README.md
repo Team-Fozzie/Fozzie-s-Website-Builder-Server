@@ -1,4 +1,4 @@
-# Blog Project
+# Fozzie's Website Builder
 
 **Author**: Alexander Stone, Justin Morris, Madeline Peters, Amanda Moen, Maxwell Rediker.
 
