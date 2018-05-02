@@ -26,6 +26,18 @@ app.put('/app/data/:id', (req, res) =>{
     .catch(console.error);
 
 });
+
+app.get('/app/data/:id', (req, res) => {
+  console.log(`In get for ${req.params.id}`);
+  client.query(`
+    SELECT * FROM projects
+   WHERE project_id = $1;
+  `,
+  [req.params.id])
+  .then( result => res.send(result.rows))
+  .catch(console.error);
+});
+
 app.get('/users', (request, response) => {
   client.query('SELECT * FROM users')
     .then(result => response.send(result.rows))
