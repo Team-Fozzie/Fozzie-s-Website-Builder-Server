@@ -73,29 +73,40 @@ app.delete('/app/user/delete/:id', (req, res) => {
 
 app.post('/users/:username', (request, response) => {
   client.query('SELECT count(*) FROM users WHERE username=$1 OR email=$2', [
-    request.params.username, request.params.email
+    request.params.username, request.body.email
   ])
     .then(results => {
       if ( parseInt(results.rows[0].count) > 0 ) {
         throw new Exception('Account already exists');
       }
-      createUser(request, response);
+      else {
+        let userObj = {
+          username: request.params.username,
+          email: request.body.email,
+          password: request.body.password
+        }
+        return createUser(userObj, response, request)
+ 
+      }
     })
-    .catch(response.send('Username or Password already exists'));
+    .catch(console.error);
 });
 
-let createUser = (request, response) => {
-  client.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3);', [
-    request.body.username,
-    request.body.email,
-    request.body.password
+let createUser = (userObj, response, request) => {
+  return client.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3);', [
+    userObj.username,
+    userObj.email,
+    userObj.password
   ])
-    .then(results => client.query('SELECT * FROM users WHERE username=$1;',[
-      request.body.username
+    .then(results => {
+      client.query('SELECT * FROM users WHERE username=$1;',[
+      userObj.username
     ])
-      .then(result => response.send(result.rows))
-      .catch(console.error)
-    )
+      .then(result => {
+        return(result.rows[0])
+      })
+      .then(result => response.send(result))
+    })
     .catch(console.error);
 };
 
