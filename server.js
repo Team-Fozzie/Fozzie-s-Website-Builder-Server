@@ -79,7 +79,10 @@ app.post('/users/:username', (request, response) => {
       if ( parseInt(results.rows[0].count) > 0 ) {
         throw new Exception('Account already exists');
       }
-      createUser(request, response);
+      else {
+        console.log('Creating New User', request.params.username);
+        createUser(request, response);
+      }
     })
     .catch(response.send('Username or Password already exists'));
 });
@@ -90,12 +93,16 @@ let createUser = (request, response) => {
     request.body.email,
     request.body.password
   ])
-    .then(results => client.query('SELECT * FROM users WHERE username=$1;',[
+    .then(results => {
+      console.log('Selecting created user')
+      client.query('SELECT * FROM users WHERE username=$1;',[
       request.body.username
     ])
-      .then(result => response.send(result.rows))
+      .then(result => {
+        console.log(result.rows);
+        response.send(result.rows)})
       .catch(console.error)
-    )
+    })
     .catch(console.error);
 };
 
