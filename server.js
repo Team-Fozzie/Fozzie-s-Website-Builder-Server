@@ -34,9 +34,37 @@ app.get('/app/project/:id', (req, res) => {
    WHERE project_id = $1;
   `,
   [req.params.id])
-  .then( result => res.send(result.rows))
-  .catch(console.error);
+    .then( result => res.send(result.rows))
+    .catch(console.error);
 });
+
+app.post('/users/:username', (request, response) => {
+  client.query('SELECT count(*) FROM users WHERE username=$1 OR email=$2', [
+    request.params.username, request.params.email
+  ])
+    .then(results => {
+      if ( parseInt(results.rows[0].count) > 0 ) {
+        throw new Exception('Account already exists');
+      }
+      createUser(request, response);
+    })
+    .catch(response.send('Username or Password already exists'));
+});
+
+let createUser = (request, response) => {
+  client.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3);', [
+    request.body.username,
+    request.body.email,
+    request.body.password
+  ])
+    .then(results => client.query('SELECT * FROM users WHERE username=$1;',[
+      request.body.username
+    ])
+      .then(result => response.send(result.rows))
+      .catch(console.error)
+    )
+    .catch(console.error);
+};
 
 app.get('/users', (request, response) => {
   client.query('SELECT * FROM users')
