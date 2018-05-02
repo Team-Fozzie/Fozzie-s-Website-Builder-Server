@@ -27,7 +27,7 @@ app.put('/app/data/:id', (req, res) =>{
 
 });
 
-app.get('/app/data/:id', (req, res) => {
+app.get('/app/project/:id', (req, res) => {
   console.log(`In get for ${req.params.id}`);
   client.query(`
     SELECT * FROM projects
