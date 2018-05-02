@@ -2,7 +2,7 @@
 
 **Author**: Alexander Stone, Justin Morris, Madeline Peters, Amanda Moen, Maxwell Rediker.
 
-**Version**: 1.0.0 
+**Version**: 0.1.0 
 
 ## Overview
 This project allows a user to build a basic website layout and get the HTML and CSS back that matches their creation.
@@ -21,10 +21,13 @@ https://githubmaxwell.github.io/Fozzie-s-Website-Builder-Client/
 
 
 ## Architecture
-HTML5, CSS3, JS, Jquery, Handlebars, Ajax.
+HTML5, CSS3, JS ES6, jQuery3.x, Handlebars, AJAX, Cors, Express, Superagent, Node 9.x, Page JS.
 
 ## Change Log
 04-30-2018 3:50pm - Application now has a readme.
+05-01-2018 6:00pm- Application now has a backend that gets one project, updates an existing project, and a front end with a user interface that has event listeners on an add button and can add templates from a side bar onto the page.
+05-02-2018 5:30pm - 
+
 
 
 ## links to any 3rd party APIs that your back-end code will be using
@@ -41,3 +44,4 @@ project_id  | project_name | user_id INTEGER REFERENCE users(user_id) | html | c
 We do not plan to use any joins.
 
 ## Credits and Collaborations
+Page JS docs.
