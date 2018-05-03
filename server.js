@@ -136,6 +136,14 @@ app.put('/app/data/:id', (req, res) =>{
     .catch(console.error);
 
 });
+app.put('/app/project/:id', (req, res) =>{
+  // console.log('in app/data/:id')
+  client.query(`UPDATE projects
+  SET project_name = $1 
+  WHERE project_id = $2;`, [req.body.project_name, req.params.id])
+    .then(() => res.send('Project Name Updated'))
+    .catch(console.error);
+});
 
 app.get('/app/project/:id', (req, res) => {
   console.log(`In get for ${req.params.id}`);
@@ -155,6 +163,7 @@ app.get('/user/projects/:id', (req, res) => {
   `,[
     req.params.id
   ])
+    // .then(result => res.send(result.rows))
     .then(result => res.send(result.rows))
     .catch(console.error);
 });
@@ -219,7 +228,27 @@ let createUser = (userObj, response, request) => {
     })
     .catch(console.error);
 };
-
+app.get('/users/:username', (request, response) => {
+  client.query('SELECT * From users WHERE username=$1;',
+    [
+      request.params.username
+    ])
+    .then(results => {
+      if(!results.rows[0].password) {
+        throw new Error('Username does not exist.');
+      } else if (request.query.password === results.rows[0].password) {
+        let user = {
+          user_id: results.rows[0].user_id,
+          username: results.rows[0].username,
+          email: results.rows[0].email
+        };
+        response.send(user);
+      } else {
+        throw new Error('Password does not match.');
+      }
+    })
+    .catch(console.error);
+});
 app.get('/users', (request, response) => {
   client.query('SELECT * FROM users')
     .then(result => response.send(result.rows))
