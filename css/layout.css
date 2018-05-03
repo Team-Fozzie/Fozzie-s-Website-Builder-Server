@@ -1,0 +1,27 @@
+section > h1 {
+  text-align: center;
+}
+section.cols-3, section.cols-2 {
+  width: 100%;
+}
+section.cols-3 > article, section.cols-2 > article, section.cols-1 > article {
+  position: relative;
+}
+section.cols-3 > article, section.cols-2 > article {
+  float: left;
+  text-align: center;
+}
+section.cols-3 > article > img, section.cols-2 > article > img, section.cols-1 > article > img {
+  display: block;
+  margin: 0 auto;
+  width: 90%;
+}
+section.cols-1 > article {
+  width: 100%;
+}
+section.cols-2 > article {
+  width: 50%;
+}
+section.cols-3 > article {
+  width: 33%;
+}

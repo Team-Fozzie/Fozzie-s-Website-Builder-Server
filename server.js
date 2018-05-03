@@ -1,11 +1,23 @@
 
 'use strict';
+require('dotenv').config();
 const pg = require('pg');
 const express = require ('express');
 const superagent = require('superagent');
 const cors = require ('cors');
-const jszip = require('jszip');
+const JSZip = require('jszip');
 const fs = require('fs');
+const FileSaver = require('FileSaver');
+
+const horizLogo = 'fozzie-web-builder-horizontal-logo.jpg';
+const logoBackground = 'fozzie-web-builder-logo-with-background.png';
+const logo = 'fozzie-web-builder-logo';
+
+const base = 'css/base.css';
+const layout = 'css/layout.css';
+const modules = 'css/modules.css';
+const reset = 'css/reset.css';
+
 
 const app= express();
 const PORT = process.env.PORT || 3000;
@@ -22,43 +34,75 @@ app.use(express.urlencoded({extended: true}));
 //get ZIP by project id
 app.get('/app/zip/:id', (req, res) => {
   console.log('params:', req.params.id);
-  let id = req.params.id.split('')
+  let id = req.params.id.split('');
   id = id[1];
-  return createFile(id);
-})
+  createFile(id)
+    .then(() => {
+      var zip = new JSZip();
+      console.log('zip40', zip);
+      zip.file('index.html');
+      console.log('zip42', zip);
+
+      zip.folder('css').file(base);
+      zip.folder('css').file(layout);
+      zip.folder('css').file(modules);
+      zip.folder('css').file(reset);
+      console.log('zip45', zip);
+
+      zip.folder('images').file(horizLogo);
+      zip.folder('images').file(logoBackground);
+      zip.folder('images').file(logo);
+      console.log('zip48', zip);
+
+      zip
+        .generateNodeStream({type:'nodebuffer',streamFiles:true})
+        .pipe(fs.createWriteStream('fozzie.zip'))
+        .on('finish', function () {
+          console.log('zip57', zip);
+          res.send(zip);
+          console.log('fozzie.zip written.');
+        });
+    });
+});
 
 let createFile = project_id => {
   console.log('PID', project_id);
   return client.query('SELECT * FROM projects WHERE project_id = $1', [project_id])
-  .then( result =>{
-    let htmlTitle = result.rows[0].project_name;
-    console.log('Head', htmlTitle);
-    let htmlArr = JSON.parse(result.rows[0].html)
-    console.log('Array', htmlArr);
-    
-    let htmlStr = htmlArr.reduce((a, element) => {
-      console.log('A: ', a);
-      console.log('Element: ', element);
-      return a = `${a}
-      ${element}`}, '')
-    console.log('Body', htmlStr);
-    let htmlPage = `
+    .then( result =>{
+      let htmlTitle = result.rows[0].project_name;
+      console.log('Head', htmlTitle);
+      let htmlArr = JSON.parse(result.rows[0].html);
+      console.log('Array', htmlArr);
+
+      let htmlStr = htmlArr.reduce((a, element) => {
+        console.log('A: ', a);
+        console.log('Element: ', element);
+        return a = `${a}
+      ${element}`;}, '');
+      let regex = new RegExp('assets\/img','gm');
+      htmlStr = htmlStr.replace(regex,'images');
+      console.log('Body', htmlStr);
+      let htmlPage = `
     <!DOCTYPE html>
     <html>
     <head>
     <title> ${htmlTitle}</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/layout.css">
+    <link rel="stylesheet" href="./css/modules.css">
     </head>
     <body>
     ${htmlStr}
     </body>
     </html>`;
-    console.log(htmlPage);
-    fs.writeFile('index.html', htmlPage, function(err){
-      if (err) throw err;
-      console.log('Created Index for Zipping')
-    })
-  }
-  ).catch(console.error)}
+      console.log(htmlPage);
+      fs.writeFile('index.html', htmlPage, function(err){
+        if (err) throw err;
+        console.log('Created Index for Zipping');
+      });
+    }
+    ).catch(console.error);};
 
 app.get('/users/:username', (request, response) => {
   client.query('SELECT * From users WHERE username=$1;',
