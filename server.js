@@ -39,9 +39,9 @@ app.get('/app/project/:id', (req, res) => {
 });
 
 //get all projects
-app.get('/app/user/projects/:id', (req, res) => {
+app.get('/user/projects/:id', (req, res) => {
   client.query(`
-  SELECT (project_id, name) FROM projects WHERE project_id = $1;
+  SELECT (project_id, project_name) FROM projects WHERE user_id = $1;
   `,[
     req.params.id
   ])
@@ -77,16 +77,16 @@ app.post('/users/:username', (request, response) => {
   ])
     .then(results => {
       if ( parseInt(results.rows[0].count) > 0 ) {
-        throw new Exception('Account already exists');
+        throw new Error('Account already exists');
       }
       else {
         let userObj = {
           username: request.params.username,
           email: request.body.email,
           password: request.body.password
-        }
-        return createUser(userObj, response, request)
- 
+        };
+        return createUser(userObj, response, request);
+
       }
     })
     .catch(console.error);
@@ -100,12 +100,12 @@ let createUser = (userObj, response, request) => {
   ])
     .then(results => {
       client.query('SELECT * FROM users WHERE username=$1;',[
-      userObj.username
-    ])
-      .then(result => {
-        return(result.rows[0])
-      })
-      .then(result => response.send(result))
+        userObj.username
+      ])
+        .then(result => {
+          return(result.rows[0]);
+        })
+        .then(result => response.send(result));
     })
     .catch(console.error);
 };
