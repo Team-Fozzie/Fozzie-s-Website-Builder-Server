@@ -1,8 +1,11 @@
+
 'use strict';
 const pg = require('pg');
 const express = require ('express');
 const superagent = require('superagent');
 const cors = require ('cors');
+const jszip = require('jszip');
+const fs = require('fs');
 
 const app= express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +18,69 @@ client.on('error', err=> console.error(err));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+//get ZIP by project id
+app.get('/app/zip/:id', (req, res) => {
+  console.log('params:', req.params.id);
+  let id = req.params.id.split('')
+  id = id[1];
+  return createFile(id);
+})
+
+let createFile = project_id => {
+  console.log('PID', project_id);
+  return client.query('SELECT * FROM projects WHERE project_id = $1', [project_id])
+  .then( result =>{
+    let htmlTitle = result.rows[0].project_name;
+    console.log('Head', htmlTitle);
+    let htmlArr = JSON.parse(result.rows[0].html)
+    console.log('Array', htmlArr);
+    
+    let htmlStr = htmlArr.reduce((a, element) => {
+      console.log('A: ', a);
+      console.log('Element: ', element);
+      return a = `${a}
+      ${element}`}, '')
+    console.log('Body', htmlStr);
+    let htmlPage = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <title> ${htmlTitle}</title>
+    </head>
+    <body>
+    ${htmlStr}
+    </body>
+    </html>`;
+    console.log(htmlPage);
+    fs.writeFile('index.html', htmlPage, function(err){
+      if (err) throw err;
+      console.log('Created Index for Zipping')
+    })
+  }
+  ).catch(console.error)}
+
+app.get('/users/:username', (request, response) => {
+  client.query('SELECT * From users WHERE username=$1;',
+    [
+      request.params.username
+    ])
+    .then(results => {
+      if(!results.rows[0].password) {
+        throw new Error('Username does not exist.');
+      } else if (request.query.password === results.rows[0].password) {
+        let user = {
+          user_id: results.rows[0].user_id,
+          username: results.rows[0].username,
+          email: results.rows[0].email
+        };
+        response.send(user);
+      } else {
+        throw new Error('Password does not match.');
+      }
+    })
+    .catch(console.error);
+});
 
 
 app.put('/app/data/:id', (req, res) =>{
@@ -125,6 +191,4 @@ app.get('/', (request, response) => {
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
 app.listen(PORT, ()=> console.log(`server started on port ${PORT}`));
-
-
 
