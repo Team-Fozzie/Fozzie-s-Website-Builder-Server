@@ -1,8 +1,8 @@
 # Fozzie's Website Builder
 
-**Author**: Alexander Stone, Justin Morris, Madeline Peters, Amanda Moen, Maxwell Rediker.
+**Author**: Alexander Stone, Justin Morris, Madeline Peters, Maxwell Rediker, Amanda Moen.
 
-**Version**: 0.1.0 
+**Version**: 0.3.0 
 
 ## Overview
 This project allows a user to build a basic website layout and get the HTML and CSS back that matches their creation.
@@ -25,9 +25,10 @@ HTML5, CSS3, JS ES6, jQuery3.x, Handlebars, AJAX, Cors, Express, Superagent, Nod
 
 ## Change Log
 04-30-2018 3:50pm - Application now has a readme.
-05-01-2018 6:00pm- Application now has a backend that gets one project, updates an existing project, and a front end with a user interface that has event listeners on an add button and can add templates from a side bar onto the page.
-05-02-2018 5:30pm - 
 
+05-01-2018 6:00pm- Application now has a backend that gets one project, updates an existing project, and a front end with a user interface that has event listeners on an add button and can add templates from a side bar onto the page.
+
+05-02-2018 5:30pm - Application now has a backend that can get all projects, delete one project, and delete all projects. The front end now has a login view, a create view, and a project view.
 
 
 ## links to any 3rd party APIs that your back-end code will be using
