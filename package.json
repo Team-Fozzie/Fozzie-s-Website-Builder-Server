@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/GitHubMaxwell/Fozzie-s-Website-Builder-Server#readme",
   "dependencies": {
+    "FileSaver": "^0.10.0",
     "cors": "^2.8.4",
+    "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "jszip": "^3.1.5",
     "make-runnable": "^1.3.6",
