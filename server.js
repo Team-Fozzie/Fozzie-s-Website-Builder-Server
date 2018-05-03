@@ -107,7 +107,7 @@ app.get('/app/project/:id', (req, res) => {
 //get all projects
 app.get('/user/projects/:id', (req, res) => {
   client.query(`
-  SELECT (project_id, project_name) FROM projects WHERE user_id = $1;
+  SELECT project_id, project_name FROM projects WHERE user_id = $1;
   `,[
     req.params.id
   ])
