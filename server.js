@@ -261,11 +261,7 @@ app.get('/users', (request, response) => {
     .catch(console.error);
 });
 
-app.get('/', (request, response) => {
-  client.query('SELECT * FROM users')
-    .then(result => response.send(result.rows))
-    .catch(console.error);
-});
+app.get('/', (req, res) => res.redirect(CLIENT_URL));
 
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
