@@ -1,6 +1,6 @@
 
 'use strict';
-require('dotenv').config();
+// require('dotenv').config();
 const pg = require('pg');
 const express = require ('express');
 const superagent = require('superagent');
@@ -34,8 +34,7 @@ app.use(express.urlencoded({extended: true}));
 //get ZIP by project id
 app.get('/app/zip/:id', (req, res) => {
   console.log('params:', req.params.id);
-  let id = req.params.id.split('');
-  id = id[1];
+  let id = req.params.id;
   createFile(id)
     .then(() => {
       var zip = new JSZip();
@@ -59,8 +58,15 @@ app.get('/app/zip/:id', (req, res) => {
         .pipe(fs.createWriteStream('fozzie.zip'))
         .on('finish', function () {
           console.log('zip57', zip);
-          res.send(zip);
-          console.log('fozzie.zip written.');
+
+          fs.writeFile('fozzie.zip', zip, function (err) {
+            if (err) throw err;
+            console.log('Created Index for Zipping');
+            res.send(zip);
+          });
+
+          // res.send(zip);
+          // console.log('fozzie.zip written.');
         });
     });
 });
@@ -255,11 +261,7 @@ app.get('/users', (request, response) => {
     .catch(console.error);
 });
 
-app.get('/', (request, response) => {
-  client.query('SELECT * FROM users')
-    .then(result => response.send(result.rows))
-    .catch(console.error);
-});
+app.get('/', (req, res) => res.redirect(CLIENT_URL));
 
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
