@@ -132,7 +132,18 @@ app.get('/users/:username', (request, response) => {
     .catch(console.error);
 });
 
+app.post('/app/project/new/:project_name', (request, response) => {
+  client.query('INSERT INTO projects (project_name, user_id) VALUES ($1, $2);',
+    [
+      request.params.project_name,
+      request.body.user_id
+    ]
+  )
+    .then(console.log('Project Name was added'))
+    .catch(console.error);
+}
 
+);
 app.put('/app/data/:id', (req, res) =>{
   // console.log('in app/data/:id')
   client.query(`UPDATE projects
