@@ -5,9 +5,10 @@ const pg = require('pg');
 const express = require ('express');
 const superagent = require('superagent');
 const cors = require ('cors');
-const JSZip = require('jszip');
 const fs = require('fs');
 const FileSaver = require('FileSaver');
+const archiver = require('archiver');
+const path = require('path');
 
 const horizLogo = 'fozzie-web-builder-horizontal-logo.jpg';
 const logoBackground = 'fozzie-web-builder-logo-with-background.png';
@@ -35,80 +36,195 @@ app.use(express.urlencoded({extended: true}));
 app.get('/app/zip/:id', (req, res) => {
   console.log('params:', req.params.id);
   let id = req.params.id;
-  createFile(id)
-    .then(() => {
-      var zip = new JSZip();
-      console.log('zip40', zip);
-      zip.file('index.html');
-      console.log('zip42', zip);
-
-      zip.folder('css').file(base);
-      zip.folder('css').file(layout);
-      zip.folder('css').file(modules);
-      zip.folder('css').file(reset);
-      console.log('zip45', zip);
-
-      zip.folder('images').file(horizLogo);
-      zip.folder('images').file(logoBackground);
-      zip.folder('images').file(logo);
-      console.log('zip48', zip);
-
-      zip
-        .generateNodeStream({type:'nodebuffer',streamFiles:true})
-        .pipe(fs.createWriteStream('fozzie.zip'))
-        .on('finish', function () {
-          console.log('zip57', zip);
-
-          fs.writeFile('fozzie.zip', zip, function (err) {
-            if (err) throw err;
-            console.log('Created Index for Zipping');
-            res.send(zip);
-          });
-
-          // res.send(zip);
-          // console.log('fozzie.zip written.');
-        });
-    });
-});
-
-let createFile = project_id => {
-  console.log('PID', project_id);
-  return client.query('SELECT * FROM projects WHERE project_id = $1', [project_id])
+  let project_id = id;
+  client.query('SELECT * FROM projects WHERE project_id = $1', [project_id])
     .then( result =>{
-      let htmlTitle = result.rows[0].project_name;
-      console.log('Head', htmlTitle);
-      let htmlArr = JSON.parse(result.rows[0].html);
-      console.log('Array', htmlArr);
+        let htmlTitle = result.rows[0].project_name;
+        let htmlArr = JSON.parse(result.rows[0].html);
+        let htmlStr = htmlArr.reduce((a, element) => {
+          return a = `${a}
+          ${element}`;}, '');
+        let regex = new RegExp('assets\/img','gm');
+        htmlStr = htmlStr.replace(regex,'images');
+        let htmlPage = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <title> ${htmlTitle}</title>
+        <link rel="stylesheet" href="./css/reset.css">
+        <link rel="stylesheet" href="./css/base.css">
+        <link rel="stylesheet" href="./css/layout.css">
+        <link rel="stylesheet" href="./css/modules.css">
+        </head>
+        <body>
+        ${htmlStr}
+        </body>
+        </html>`;
+        return fs.writeFile('index.html', htmlPage, function(err, htmlPage){
+          if (err) 
+          {throw err;}
+          else {
+            console.log('Created Index for Zipping');
+            return htmlPage;
+          }
+        })
+      })
+      .then((results) => {
+        var output = fs.createWriteStream('fozzie.zip');
+        var archive = archiver('zip', {
+          zlib: { level: 9 } // Sets the compression level.
+        });
+        output.on('close', function() {
+          console.log(archive.pointer() + ' total bytes');
+          console.log('archive closed and finished.');
+        });
+        output.on('end', function(){
+          console.log('Unexpected end of data')
+        })
+        archive.pipe(output);
+        archive.file('index.html', {name: 'index.html'});
+        archive.directory('images/', 'images');
+        archive.directory('css/', 'css');
+        return archive.finalize()
+      })
+        .then(() => {
+        console.log('after finalize')
+        let filepath = 'fozzie.zip';
+        fs.exists(filepath, function(exists){
+          if (exists) {
+            console.log('filepath exists');
+            res.writeHead(200, {
+              'Content-Type': 'application/octet-stream',
+              'Content-Disposition': 'attachment; filename=fozzie.zip'
+            });
+            fs.createReadStream(filepath).pipe(res);
+          } else {
+            res.writeHead(400, {'Content-Type': 'text/plain'});
+            res.end('File does not exist');
+          }
+        })
+        }).catch(console.error);
+        
+      })
+      
+      //REVIEW: Partially working GZIP functionality
+      //   const gzip = zlib.createGzip();
+      //   const indexInput = fs.createReadStream('index.html');
+      //   const cssBase = fs.createReadStream('css/base.css');
+      //   const cssLayout = fs.createReadStream('css/layout.css');
+      //   const cssModules = fs.createReadStream('css/modules.css');
+      //   const cssReset = fs.createReadStream('css/reset.css');
+      //   const horizLogo = fs.createReadStream('fozzie-web-builder-horizontal-logo.jpg');
+      //   const logoBackground = fs.createReadStream('fozzie-web-builder-logo-with-background.png');
+      //   const logo = fs.createReadStream('fozzie-web-builder-logo.png'); 
+      //   const out = fs.createWriteStream('html.gz');
+      //   indexInput.pipe(gzip).pipe(out);
+      //   cssBase.pipe(gzip).pipe(out);
+      // })
+      // .catch(console.error)
+      //REVIEW: Nonworking JSZIP Functionality
+      //   let zip = new JSZip();
+      //   zip.file('index.html',results);
+      //   console.log('index',zip)
+      //   return zip;})
+      // .then((zip) =>{
+      //   console.log('css base',zip)
+      //   zip.file('css/base.css', base, {createFolders: true})
+      //   // console.log('base css zip header',res.header);
+      //   return zip;
+      // })
+      // .then((zip) =>{
+      //   zip.file('css/layout.css', layout, {createFolders: true});
+      //   // console.log('layout css zip header',res.header);
+      //   return zip;
+      // })
+      // .then((zip) =>{
+      //   zip.file('css/modules.css',modules, {createFolders: true});
+      //   // console.log('module css header',res.header);
+      //   return zip;
+      // })
+      // .then((zip) =>{
+      //   zip.file('css/reset.css', reset, {createFolders: true});
+      //   // console.log('reset css header',res.header);
+      //   return zip;
+      // })
+      // .then((zip) =>{
+      //   zip.file('images/fozzie-web-builder-horizontal-logo.jpg', horizLogo, {createFolders: true});
+      //   // console.log('images1 header',res.header);
+      //   return zip;
+      // })
+      // .then((zip) =>{
+      //   zip.file('images/fozzie-web-builder-logo-with-background.png',logoBackground, {createFolders: true});
+      //   // console.log('images2 header',res.header);
+      //   return zip;
+      // })
+      // .then((zip) =>{
+      //   zip.file('images/fozzie-web-builder-logo',logo, {createFolders: true});
+      //   // console.log('images3',res.header);
+      //   return zip;
+      // })
+      // .then((zip) =>{
+      //   zip
+      //   .generateNodeStream({type:'nodebuffer',streamFiles:true})
+      //   .pipe(fs.createWriteStream('fozzie.zip'))
+      //   .on('finish', function () {
+      //     // console.log('zip57', zip);
 
-      let htmlStr = htmlArr.reduce((a, element) => {
-        console.log('A: ', a);
-        console.log('Element: ', element);
-        return a = `${a}
-      ${element}`;}, '');
-      let regex = new RegExp('assets\/img','gm');
-      htmlStr = htmlStr.replace(regex,'images');
-      console.log('Body', htmlStr);
-      let htmlPage = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <title> ${htmlTitle}</title>
-    <link rel="stylesheet" href="./css/reset.css">
-    <link rel="stylesheet" href="./css/base.css">
-    <link rel="stylesheet" href="./css/layout.css">
-    <link rel="stylesheet" href="./css/modules.css">
-    </head>
-    <body>
-    ${htmlStr}
-    </body>
-    </html>`;
-      console.log(htmlPage);
-      fs.writeFile('index.html', htmlPage, function(err){
-        if (err) throw err;
-        console.log('Created Index for Zipping');
-      });
-    }
-    ).catch(console.error);};
+      //     fs.writeFile('fozzie.zip', zip, function (err) {
+      //       if (err) throw err;
+      //       console.log(zip);
+      //       // console.log('before send header',res.header);
+      //       res.send(zip);
+      //     });
+      // })
+      //     // res.send(zip);
+      //     // console.log('fozzie.zip written.');
+        // })
+        // .catch(console.error);
+
+// let createFile = (project_id, response, request) => {
+//   console.log('PID', project_id);
+//   console.log('response', response);
+//   console.log('request', request);
+//   return client.query('SELECT * FROM projects WHERE project_id = $1', [project_id])
+//     .then( result =>{
+//       let htmlTitle = result.rows[0].project_name;
+//       console.log('Head', htmlTitle);
+//       let htmlArr = JSON.parse(result.rows[0].html);
+//       console.log('Array', htmlArr);
+
+//       let htmlStr = htmlArr.reduce((a, element) => {
+//         console.log('A: ', a);
+//         console.log('Element: ', element);
+//         return a = `${a}
+//       ${element}`;}, '');
+//       let regex = new RegExp('assets\/img','gm');
+//       htmlStr = htmlStr.replace(regex,'images');
+//       console.log('Body', htmlStr);
+//       let htmlPage = `
+//     <!DOCTYPE html>
+//     <html>
+//     <head>
+//     <title> ${htmlTitle}</title>
+//     <link rel="stylesheet" href="./css/reset.css">
+//     <link rel="stylesheet" href="./css/base.css">
+//     <link rel="stylesheet" href="./css/layout.css">
+//     <link rel="stylesheet" href="./css/modules.css">
+//     </head>
+//     <body>
+//     ${htmlStr}
+//     </body>
+//     </html>`;
+//       console.log(htmlPage);
+//       fs.writeFile('index.html', htmlPage, function(err){
+//         if (err) throw err;
+//         console.log('Created Index for Zipping');
+      
+//       });
+//       response.send(htmlPage);
+//       return htmlPage;
+//     }).catch(console.error)
+//     };
 
 app.get('/users/:username', (request, response) => {
   client.query('SELECT * From users WHERE username=$1;',
