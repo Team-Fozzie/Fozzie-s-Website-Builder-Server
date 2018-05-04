@@ -1,12 +1,11 @@
 * {
   box-sizing: border-box;
-  
 }
 body {
-  background: #06aaf6;
+  background: #fff;
   margin: 0 auto;
   max-width: 700px;
-  padding-top: 3em;
+  padding-top: 7em;
   position: relative;
   width: 90%;
 }

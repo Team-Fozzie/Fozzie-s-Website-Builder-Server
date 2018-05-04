@@ -25,3 +25,32 @@ section.cols-2 > article {
 section.cols-3 > article {
   width: 33%;
 }
+section.cols-1-article-text-right > article, section.cols-1-article-text-left > article {
+  width: 100%
+}
+section.cols-1-article-text-right > article > img {
+  width: 50%;
+  float: left;
+}
+section.cols-1-article-text-right > article > .text-container {
+  width: 50%;
+  float: right;
+}
+section.cols-1-article-text-left > article > img {
+  width: 50%;
+  float: right;
+}
+section.cols-1-article-text-left > article > .text-container {
+  width: 50%;
+  float: left;
+}
+section.cols-1-article-img-text-bottom > article {
+  width: 100%;
+}
+section.cols-1-article-img-text-bottom > article > img {
+  width: 100%;
+}
+section.cols-1-article-img-text-bottom > article > .text-container {
+  margin-top: 1em;
+  width: 100%;
+}
