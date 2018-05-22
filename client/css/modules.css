@@ -1,0 +1,296 @@
+/* The following is specifically for the elements on our web builder*/
+#hamburger-menu-icon {
+    color: white;
+    font-size: 2.2em;
+    text-align: right;
+    position : absolute;
+    top: 8px;
+    right: 20px;
+}
+.top-nav {
+    background: #F17105;
+    box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 5;
+}
+.top-nav > a > img {
+    width: 50px;
+    display:block;
+    margin: .2em auto;
+}
+.text-container {
+    margin: 0 auto;
+    margin-bottom: 1em;
+    width: 90%;
+    text-align: center;
+}
+.cta-container {
+    padding: 1em 0;
+}
+.btn-center {
+    height:70px;
+    margin:auto 0;
+}
+.btn-cta, .lite-cta {
+    text-decoration: none;
+    text-transform: uppercase;
+    padding:12px;
+    transition:220ms;
+    width:150px;
+    color: black;
+}
+.btn-cta {
+    border:1px solid black;
+    border-radius: 10px;
+    background-color: white;
+}
+.btn-cta:hover {
+    color: white;
+    background-color: black;
+}
+.lite-cta:hover {
+    color: red;
+}
+
+.currently-selected {
+    border: blue 1px solid;
+}
+
+.text-overlay {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  transform: translateY(-50%);
+}
+/*This is CSS for the user inputs*/
+
+section.template {
+  border: dashed 2px gray;
+  height: 250px;
+}
+section.template i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 5em;
+  transform: translate(-50%, -50%);
+  color: gray;
+  box-shadow: 1px 1px 1px 1px #888;
+  border-radius: 50%;
+}
+section.template i:active {
+  box-shadow: 1px 1px 1px 3px #888;
+}
+#user-input-menu {
+    box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.4);
+  position: fixed;
+  height: 100vh;
+  width: 33%;
+  top: 0;
+  left: -33%;
+  background: #003459;
+  z-index: 5;
+  transition: all .2s ease;
+  opacity: 1;
+}
+#user-input-menu:focus {
+    left: 0;
+}
+#menu-exit {
+    float: right;
+    padding: .5em;
+    font-size: 3em;
+    color: white;    
+}
+#general-menu-items {
+    clear: right;
+    padding: none;
+}
+#general-menu-items li {
+    list-style-type: none;
+}
+#general-menu-items li:hover {
+    background: #F17105;
+}
+#general-menu-items a {
+    color: white;
+    font-family: sans-serif;
+    font-size: .8em;
+    text-decoration: none;
+    text-transform: uppercase;    
+}
+
+/*HOME VIEW CSS STYLING*/
+#home-view > img, #home-view-login > img  {
+    width: 200px;
+    margin: 0 auto;
+    display: block;
+}
+#home-view > form > input, #home-view-login > form > input {
+    background: none;
+    border: none;
+    border-bottom: solid 1px white;
+    color: white;
+    display: block;
+    font-size: 1.2em;
+    margin: 1em auto;
+}
+#home-view > form > input:focus, #home-view-login > form > input:focus {
+  outline: none;
+} 
+/*TO DEAL WITH PLACEHOLDER*/
+#home-view > form > input::-webkit-input-placeholder, #home-view-login > form > input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: white;
+  opacity: .7;
+}
+#home-view > form > input::-moz-placeholder, #home-view-login > form > input::-moz-placeholder { /* Firefox 19+ */
+  color: white;
+  opacity: .7;
+}
+#home-view > form > input:-ms-input-placeholder, #home-view-login > form > input:-ms-input-placeholder { /* IE 10+ */
+  color: white;
+  opacity: .7;
+}
+#home-view > form > input:-moz-placeholder, #home-view-login > form > input:-moz-placeholder { /* Firefox 18- */
+  color: white;
+  opacity: .7;
+}
+
+#home-view > form > button, #home-view-login > form > button  {
+    background: #003459;
+    border: none;
+    border-radius: 3px;
+    box-shadow: 2px 2px 13px -2px #222;
+    color: white;
+    display: block;
+    font-size: .8em;
+    margin: 0 auto;
+    margin-bottom: 1em;
+    padding: 1em;
+}
+#home-view > form > button:active, #home-view-login > form > button:active {
+    box-shadow: 2px 2px 13px 0px #222;
+    outline: none;
+    transform: scale(.95);
+    transition: all .21s ease;
+} 
+
+/*LOGIN VIEW CSS STYLING*/
+#home-view-login > a, #home-view > a {
+    color: white;
+    display: block;
+    font-family: sans-serif;
+    font-size: .6em;
+    padding: 2em;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+/*CREATE VIEW CSS STYLING*/
+
+.template-body > article > img {
+    width: 30% !important;
+}
+.template-body {
+    background: #06aaf6 !important;
+    margin: 0 auto;
+    width: 90%;
+}
+.create-view-header {
+    background: #003459;
+    margin-bottom: 2em;
+    text-align: center;
+}
+.create-view-header > img {
+    width: 90px;
+}
+.create-view-header > h1 {
+    color: white;
+    font-family: sans-serif;
+    font-size: .8em;
+    margin: 0;
+    padding-bottom: .5em;
+    text-transform: uppercase;
+}
+
+/*SIGN IN VIEW ERROR*/
+#error-block {
+    background: #F17105;
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.3);
+    color: white;
+    display: block;
+    font-family: sans-serif;
+    font-size: .5em;
+    margin: 0 auto;
+    opacity: 0;
+    padding: 1em;
+    text-align: center;
+    text-transform: uppercase;
+    width: 42%;
+}
+#template-list {
+    clear: right;
+    display: none;
+    color: white;
+    list-style-type: none;
+    cursor: pointer;
+}
+#template-list li {
+    padding: .2em;    
+}
+#template-list li:hover {
+    background: #F17105;
+}
+#section-list {
+    display:none;
+}
+/*PROJECT VIEW STYLING*/
+#project-view > ul {
+    list-style-type:none;
+    padding:0;
+}
+#project-view > ul > li {
+    margin: 1em;
+    border-bottom: solid 1px rgba(255,255,255,0.3);
+    padding: 1em 0;
+}
+#project-view > ul > li > a, .add-new-project {
+    color: white;
+    font-family: sans-serif;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+#project-view > ul > li > span {
+    background: #003459;
+    border-radius: 50%;
+    padding: .5em;
+    font-size: 1em;
+    color:white;
+}
+#project-view > ul > li > span:first-child {
+    border-left: solid 1px rgba(255,255,255,0.7);
+}
+.add-new-project i {
+    font-size: 1em; 
+    color: white;
+}
+@media screen and (max-width: 700px)  {
+    #project-view > ul > li > a {
+        display: block;
+        padding-bottom: 1em;
+    }
+}
+@media screen and (max-width: 700px) {
+    #about-us-view .cols-2 > article {
+        width: 100%;
+    }
+}

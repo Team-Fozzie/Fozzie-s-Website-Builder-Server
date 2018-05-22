@@ -1,8 +1,8 @@
 # Fozzie's Website Builder
 
-**Author**: Alexander Stone, Justin Morris, Madeline Peters, Amanda Moen, Maxwell Rediker.
+**Author**: Alexander Stone, Justin Morris, Madeline Peters, Maxwell Rediker, Amanda Moen.
 
-**Version**: 0.1.0 
+**Version**: 0.4.0 
 
 ## Overview
 This project allows a user to build a basic website layout and get the HTML and CSS back that matches their creation.
@@ -25,9 +25,14 @@ HTML5, CSS3, JS ES6, jQuery3.x, Handlebars, AJAX, Cors, Express, Superagent, Nod
 
 ## Change Log
 04-30-2018 3:50pm - Application now has a readme.
-05-01-2018 6:00pm- Application now has a backend that gets one project, updates an existing project, and a front end with a user interface that has event listeners on an add button and can add templates from a side bar onto the page.
-05-02-2018 5:30pm - 
 
+05-01-2018 6:00pm- Application now has a backend that gets one project, updates an existing project, and a front end with a user interface that has event listeners on an add button and can add templates from a side bar onto the page.
+
+05-02-2018 5:30pm - Application now has a backend that can get all projects, delete one project, and delete all projects. The front end now has a login view, a create view, and a project view.
+
+05-03-2018 6:00pm- Application now has a server that can create a new file with the HTML that the user will eventually get back. The front end now has the delete wired up. You can now also change a project's name.
+
+05-04-2018 10:00am- Application now has the ability to zip a file for the user. Projects now populate and save for future viewing. 
 
 
 ## links to any 3rd party APIs that your back-end code will be using
@@ -44,4 +49,4 @@ project_id  | project_name | user_id INTEGER REFERENCE users(user_id) | html | c
 We do not plan to use any joins.
 
 ## Credits and Collaborations
-Page JS docs.
+Page JS docs, JSZip docs, Archiver docs, John Cokos, Noah Gibbin, Catherine Looper, Nicholas Carignan. 
