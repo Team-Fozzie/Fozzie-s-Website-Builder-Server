@@ -31,6 +31,7 @@ client.on('error', err=> console.error(err));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(express.static('./public'));
 
 //get ZIP by project id
 app.get('/app/zip/:id', (req, res) => {
@@ -266,9 +267,9 @@ app.get('/users', (request, response) => {
     .catch(console.error);
 });
 
-app.get('/', (req, res) => res.redirect(CLIENT_URL));
+app.get('/', (req, res) => res.sendFile('index.html', {root: './public'}));
 
-app.get('*', (req, res) => res.redirect(CLIENT_URL));
+app.get('*', (req, res) => res.sendFile('index.html', {root: './public'}));
 
 app.listen(PORT, ()=> console.log(`server started on port ${PORT}`));
 
