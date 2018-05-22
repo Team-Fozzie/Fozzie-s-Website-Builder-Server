@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base href="/.">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Web Builder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/layout.css">
+    <link rel="stylesheet" href="./css/modules.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+    
+    <script id="section-template" type="text/x-handlebars-template">
+        {{{body}}}    
+    </script>
+    <script id="current-selection-template" type="text/x-handlebars-template">
+        <section class="currently-selected"></section>
+    </script>
+    <script id="add-new-project-li" type="text/x-handlebars-template">
+        <li class="add-new-project">
+            Add New Project<i class="fas fa-plus-circle"></i>
+        </li>
+    </script> 
+    <script id="project-li-template" type="text/x-handlebars-template">
+        <li data-projectid="{{project_id}}">
+            <a href="/create/{{project_id}}/{{project_name}}">{{project_name}}</a>
+            <span class="edit-project"><i class="fas fa-edit"></i></span>
+            <span class="delete-project"><i class="fas fa-trash-alt"></i></span>
+            <span class="download-project"><i class="fas fa-download"></i></span>
+        </li>
+    </script>
+    <script id="header-template" type="text/x-handlebars-template">
+        <header class="create-view-header">
+            <img src="./assets/img/fozzie-web-builder-logo.png" alt="site logo"/>
+            <h1>Your Site Title</h1>
+        </header>
+    </script>
+    <script id="template-one" type="text/x-handlebars-template">
+        <section id="order-{{order}}" class="cols-1">
+            <article>
+                <img src="./assets/img/fozzie-web-builder-horizontal-logo.jpg" alt="img alt">
+            </article> 
+        </section>
+    </script>
+    <script id="template-two" type="text/x-handlebars-template">
+            <section id="order-{{order}}" class="cols-2">
+                <article>
+                    <img src="./assets/img/fozzie-web-builder-logo-with-background.png" alt="img alt">
+                </article>
+                <article>
+                    <img src="./assets/img/fozzie-web-builder-logo-with-background.png" alt="img alt">
+                </article>
+            </section>
+    </script>
+    <script id="template-three" type="text/x-handlebars-template">
+        <section id="order-{{order}}" class="cols-3">
+            <article>
+                <img src="./assets/img/fozzie-web-builder-logo-with-background.png" alt="img alt">
+            </article>
+            <article>
+                <img src="./assets/img/fozzie-web-builder-logo-with-background.png" alt="img alt">
+            </article>
+            <article>
+                <img src="./assets/img/fozzie-web-builder-logo-with-background.png" alt="img alt">
+            </article>
+        </section>
+    </script>
+    <script id="template-four" type="text/x-handlebars-template">
+        <section id="order-{{order}}" class="cols-2">
+            <article>
+                <img src="./assets/img/fozzie-web-builder-logo-with-background.png" alt="img alt">
+                <div class="text-container">
+                    <h2>Title</h2>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+                        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type
+                        specimen book.
+                    </p>
+                    <div class="cta-container">
+                        <a class="lite-cta" href="#">Lite CTA</a>
+                        <a class="btn-cta" href="#">Main CTA</a>
+                    </div>
+                </div>
+            </article>
+            <article>
+                <img src="./assets/img/fozzie-web-builder-logo-with-background.png" alt="img alt">
+                <div class="text-container">
+                    <h2>Title</h2>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+                        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type
+                        specimen book.
+                    </p>
+                    <div class="cta-container">
+                        <a class="lite-cta" href="#">Lite CTA</a>
+                        <a class="btn-cta" href="#">Main CTA</a>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </script>
+    <script id="template-five" type="text/x-handlebars-template">
+            <section id="order-{{order}}" class="cols-1-article-text-right">
+                <article>
+                    <img src="./assets/img/fozzie-web-builder-logo-with-background.png" alt="img alt">
+                    <div class="text-container">
+                        <h2>Title</h2>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+                            dummy text.
+                        </p>
+                        <div class="cta-container">
+                            <a class="lite-cta" href="#">Lite CTA</a>
+                            <a class="btn-cta" href="#">Main CTA</a>
+                        </div>
+                    </div>
+                </article>
+            </section>
+        </script>
+        <script id="template-six" type="text/x-handlebars-template">
+            <section id="order-{{order}}" class="cols-1-article-text-left">
+                <article>
+                    <img src="./assets/img/fozzie-web-builder-logo-with-background.png" alt="img alt">
+                    <div class="text-container">
+                        <h2>Title</h2>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+                            dummy text.
+                        </p>
+                        <div class="cta-container">
+                            <a class="lite-cta" href="#">Lite CTA</a>
+                            <a class="btn-cta" href="#">Main CTA</a>
+                        </div>
+                    </div>
+                </article>
+            </section>
+        </script>
+        <script id="template-seven" type="text/x-handlebars-template">
+            <section id="order-{{order}}" class="cols-1-article-img-text-bottom">
+                <article>
+                    <img src="./assets/img/fozzie-web-builder-horizontal-logo.jpg" alt="img alt">
+                    <div class="text-container">
+                        <h2>Title</h2>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+                            dummy text.
+                        </p>
+                        <div class="cta-container">
+                            <a class="lite-cta" href="#">Lite CTA</a>
+                            <a class="btn-cta" href="#">Main CTA</a>
+                        </div>
+                    </div>
+                </article>
+            </section>
+        </script>
+        <script id="edit-section-list" type="text/x-handlebars-template">
+            <li class="section-edit" data-order="{{order}}">Section {{order}}<span class="delete-section"><i class="fas fa-trash-alt"></i></span></li>
+        </script>
+</head>
+<!-- THIS IS THE END OF THE HEAD AND BEGINNING OF THE BODY-->
+<body>
+    <nav class="top-nav">
+        <a href="/"><img src="./assets/img/fozzie-web-builder-logo.png" alt="Fozzie Logo"></a>
+        <div id="hamburger-menu-icon"><i class="fas fa-bars"></i></div>
+    </nav>
+    <nav id="user-input-menu">
+        <div id="menu-exit">
+            <i class="fas fa-times"></i>
+        </div>
+        <ul id="template-list">
+            <li data-cols="template1">One Full Width Image</li>
+            <li data-cols="template2">Two Images</li>
+            <li data-cols="template3">Three Images</li>
+            <li data-cols="template4">Two Images with Text</li>
+            <li data-cols="template5">Image and Text to the Right</li>
+            <li data-cols="template6">Image and Text to the Left</li>
+            <li data-cols="template7">Full Width Image with Text Underneath</li>
+        </ul>
+        <ul id="section-list">
+            <li><h3>Current Sections (<span id="section-count">0</span>)</h3></li>
+            <li>
+                <ul id="current-sections"></ul>
+            </li>
+        </ul>
+        
+        <ul id="general-menu-items">
+            <li>
+                <a href="/about-us">About Us</a>
+            </li>
+            <li>
+                <a href="/sign-up">Sign up</a>
+            </li>
+            <li>
+                <a href="/">Log In</a>
+            </li>
+        </ul>
+    </nav>
+    <section id="home-view-login">
+        <img src="./assets/img/fozzie-web-builder-logo.png" alt="fozzie web builder logo">
+        <form id="home-view-login">
+            <input id="login-username" type="text" placeholder="username" required>
+            <input id="login-password" type="password" placeholder="password">
+            <button type="submit">Login</button>
+        </form>
+        <a href="/sign-up">Don't have an account? Sign up now!</a>
+        </section>
+    </section>
+    <section id="home-view">
+        <img src="./assets/img/fozzie-web-builder-logo.png" alt="fozzie web builder logo">
+        <div id="error-block">This Username or Email is already registered.</div>
+        <form id="home-view-signup">
+            <input id="username" type="text" placeholder="username" required>
+            <input id="email" type="text" placeholder="email" required>
+            <input id="password" type="password" placeholder="password" >
+            
+            <button type="submit">Sign Up</button>
+        </form>
+        <a href="/">Back to login</a>
+    </section>
+    <section id="project-view">
+        <ul></ul>
+    </section>
+    <section id="web-builder-view">
+        <section id="web-row-container"></section>
+        <section id="add-new-section" class="template">
+            <div>
+                <i class="fas fa-plus-circle"></i>
+            </div>
+        </section>
+    </section>
+    <section id="site-view"></section>
+    <section id="about-us-view">
+        <header>
+            <h1>About Us</h1>
+        </header>
+        <p>We are Team Fozzie!</p>
+        <section class="cols-2">
+            <article>
+                <img src='media/MadiPeters.jpeg' alt="Madeline Peters" title="Madeline Peters">
+                <div class="text-container">
+                    <h2>Madeline Peters</h2>
+                    <p>I am a future software developer with a background in the sciences and a passion for the outdoors. I am committed
+                        to lifelong learning and professional development. My interests include the intersection of science and technology,
+                        geospatial analysis, and translating scientific language into terms that non-scientists can understand. Plant
+                        identification, hiking, rhetoric, travel, and learning about psychology are some of my main hobbies. I love
+                        cats.
+                    </p>
+                    <div>
+                        <a href="https://www.linkedin.com/in/madeline-peters/">
+                            <img src="media/li.png">
+                        </a>
+                        <a href="https://github.com/madelinepet">
+                            <img src="media/gh.png">
+                        </a>
+                    </div>
+                </div>
+            </article>
+            <article>
+                <img src='media/JustinMorris.jpeg' alt="Justin Morris" title="Justin Morris">
+                <div class="text-container">
+                    <h2>Justin Morris</h2>
+                    <p>I went to school at Northwest Nazarene University where I graduated with a BA in Music Industry, which means
+                        I got to spend quite of bit of time in studio recording, mixing, editing and mastering but also got a traditional
+                        musical education. My primary instrument is guitar but I have also learned how to play piano, bass and ukulele.
+                        <p>
+                            After school I got hired on full time at Inspirational Family Radio where I primarily worked for 94.1 The Voice doing web
+                            design and creating the On-Air product. I spent over two years at IFR creating spots, commercials, programs,
+                            logos and connections with great leaders of the Treasure Valley and around the world.
+                            <p>
+                                Now I'm attending Code Fellows and pursuing a Career in Software Development and Full-Stack JavaScript.
+                            </p>
+                            <div>
+                                <a href="https://www.linkedin.com/in/justin-morris-81a83970/">
+                                    <img src="media/li.png">
+                                </a>
+                                <a href="https://github.com/justeban">
+                                    <img src="media/gh.png">
+                                </a>
+                            </div>
+                </div>
+            </article>
+        </section>
+        <section class="cols-2">
+            <article>
+                <img src='media/Photo.png' alt="Alexander Stone" title="Alexander Stone">
+                <div class="text-container">
+                    <h2>Alexander Stone</h2>
+                    <p>Software developer, attended several small colleges before earning my associates degree (City College of San
+                        Fransico(2011-2013), College of San Mateo and Skyline College(2013-2015), and finally Pierce College where
+                        I earned my Associates Degree Winter 2015. I also attended Central Washington University for a year studying
+                        for my Computer Science degree. Planning on going into Python. I like archeaology, and seriously considered
+                        a career in that. Love cats
+                    </p>
+                    <div>
+                        <a href="#"></a>
+                        <a href="https://github.com/astone648">
+                            <img src="media/gh.png">
+                        </a>
+                    </div>
+                </div>
+            </article>
+            <article>
+                <img src='media/MaxRediker.jpg' alt="Maxwell Rediker" title="Maxwell Rediker">
+                <div class="text-container">
+                    <h2>Maxwell Rediker</h2>
+                    <p>Full-Stack JavaScript Developer. During the course of my time at Code Fellows I have discovered a new found love
+                        of UI. I have really enjoyed making sites look good. I'm originally from Texas, but grew up all over the
+                        Middle-East.
+                    </p>
+                    <div>
+                        <a href="https://www.linkedin.com/in/maxwellrediker/">
+                            <img src="media/li.png" />
+                        </a>
+                        <a href="https://github.com/GitHubMaxwell">
+                            <img src="media/gh.png" />
+                        </a>
+                    </div>
+                </div>
+            </article>
+        </section>
+        <section class="cols-2">
+            <article>
+                <img src='media/amanda.jpg' alt="Amanda Moen" title="Amanda Moen">
+                <div class="text-container">
+                    <h2>Amanda Moen</h2>
+                    <p>
+                        From Lake Stevens, WA. Lover of all things Disney. I have ADD and Sensory Integration. Ballerina since fall 1993, and been
+                        "en pointe" since 1995. Attended EvCC majored in accounting, education, and finally, CIS. Been working contract
+                        IT jobs since summer 2012.
+                    </p>
+                    <div>
+                        <a href="https://www.linkedin.com/in/amandalmoen/">
+                            <img src="media/li.png" />
+                        </a>
+                        <a href="https://github.com/AmandaMoen">
+                            <img src="media/gh.png" />
+                        </a>
+                    </div>
+                </div>
+            </article>
+    </section>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.rawgit.com/visionmedia/page.js/master/page.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.0.2/jszip-utils.min.js"></script>
+
+    <script src="scripts/model/model.js"></script>
+    <script src="scripts/model/templateModel.js"></script>
+    <script src="scripts/controller/controller.js"></script> 
+    <script src="scripts/view/view.js"></script>
+    <script src="scripts/view/create-view.js"></script>
+    <script src="scripts/view/home-view.js"></script>
+    <script src="scripts/view/about-view.js"></script>
+    <script src="scripts/view/login-view.js"></script>
+    <script src="scripts/view/project-view.js"></script>
+    <script src="scripts/controller/routes.js"></script>
+
+</body>
+
+</html>

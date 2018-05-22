@@ -1,0 +1,17 @@
+* {
+  box-sizing: border-box;
+  
+}
+body {
+  background: #fff;
+  margin: 0 auto;
+  max-width: 700px;
+  padding-top: 7em;
+  position: relative;
+  width: 90%;
+}
+section {
+  overflow: auto;
+  margin-bottom: 2em;  
+  position: relative;
+}
